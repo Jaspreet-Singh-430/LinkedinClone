@@ -81,7 +81,7 @@ const ProfileHeader = ({authUser,userData,onSave,isOwnProfile}) => {
   },[isConnected,connectionStatus])
   const renderConnectionButton=()=>{
     const baseClass="text-white py-2 px-4 rounded-full transition duration-300 flex items-center justify-center"
-    switch(getConnectionStatus()){
+    switch(getConnectionStatus){
       case 'connected':
         return (
         <div className='flex gap-2 justify-center'>
