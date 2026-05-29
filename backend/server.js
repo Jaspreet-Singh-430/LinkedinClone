@@ -10,6 +10,14 @@ import postRoutes from "./routes/postRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import connectionRoutes from "./routes/connectionRoutes.js";
 dotenv.config();
+
+const requiredEnv = ["MONGO_URI", "JWT_SECRET"];
+const missingEnv = requiredEnv.filter((name) => !process.env[name]);
+if (missingEnv.length) {
+    console.error("Missing required environment variables:", missingEnv.join(", "));
+    process.exit(1);
+}
+
 const app = express();
 const __dirname = path.resolve();
 if(process.env.NODE_ENV!="production"){
@@ -33,7 +41,17 @@ if(process.env.NODE_ENV=="production"){
         res.sendFile(path.resolve(__dirname,"frontend","dist","index.html"))
     })
 }
-app.listen(PORT, () => {
-   ConnectDB();
-    console.log(`Server is running on port ${PORT}`);
-});
+
+const startServer = async () => {
+    try {
+        await ConnectDB();
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (err) {
+        console.error("Failed to start server due to database connection error.", err);
+        process.exit(1);
+    }
+};
+
+startServer();
