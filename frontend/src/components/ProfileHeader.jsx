@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useMemo} from 'react'
 import { useQueryClient,useQuery,useMutation} from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios';
 import toast from 'react-hot-toast';
@@ -71,14 +71,14 @@ const ProfileHeader = ({authUser,userData,onSave,isOwnProfile}) => {
       toast.error(error.response?.data?.message || 'Failed to remove connection.');
     }
   })
-  const getConnectionStatus=()=>{
+  const getConnectionStatus=useMemo(()=>{
     if(isConnected){
       return 'connected'
     }
     if(!isConnected)
       return 'notConnected'
     return connectionStatus?.status
-  }
+  },[isConnected,connectionStatus])
   const renderConnectionButton=()=>{
     const baseClass="text-white py-2 px-4 rounded-full transition duration-300 flex items-center justify-center"
     switch(getConnectionStatus()){
